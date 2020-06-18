@@ -6,17 +6,17 @@
 /*   By: tturnber <tturnber@MSK.21-SCHOOL.RU>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/09 14:54:53 by tturnber          #+#    #+#             */
-/*   Updated: 2020/06/09 14:59:09 by student          ###   ########.fr       */
+/*   Updated: 2020/06/18 16:24:17 by student          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
-char				*ft_gnl_read_file(int fd, char **stack)
+static char				*ft_gnl_read_file(int fd, char **stack)
 {
-	char			*buffer;
-	char			*buffer_stack;
-	int				i;
+	char				*buffer;
+	char				*buffer_stack;
+	int					i;
 
 	buffer = (char *)malloc(sizeof(char *) * (BUFFER_SIZE + 1));
 	if (buffer == NULL)
@@ -41,11 +41,11 @@ char				*ft_gnl_read_file(int fd, char **stack)
 	return (*stack);
 }
 
-int					get_next_line(int fd, char **line)
+int						get_next_line(int fd, char **line)
 {
-	static char		*stack[1024];
-	char			*line_stack;
-	char			*copy_stack;
+	static char			*stack[1024];
+	char				*line_stack;
+	char				*copy_stack;
 
 	stack[fd] = ft_gnl_read_file(fd, &stack[fd]);
 	if (!(line) || !(stack[fd]))
