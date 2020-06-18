@@ -12,7 +12,7 @@
 
 #include "get_next_line.h"
 
-char				*ft_gnl_read_file(int fd, char *stack)
+char				*ft_gnl_read_file(int fd, char **stack)
 {
 	char			*buffer;
 	char			*buffer_stack;
@@ -48,7 +48,7 @@ int					get_next_line(int fd, char **line)
 	char			*copy_stack;
 
 	stack[fd] = ft_gnl_read_file(fd, &stack[fd]);
-	if (!(line) || !(stack))
+	if (!(line) || !(stack[fd]))
 		return (-1);
 	line_stack = ft_strchr(stack[fd], '\n');
 	if (line_stack)
