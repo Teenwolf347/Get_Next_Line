@@ -25,7 +25,7 @@ static char				*ft_gnl_read_file(int fd, char *stack)
 		return (0);
 	if (stack == NULL)
 		stack = ft_strdup("");
-	while (!(ft_strchr(stack, '\n')))
+	while (stack != NULL && !(ft_strchr(stack, '\n')))
 	{
 		i = read(fd, buffer, BUFFER_SIZE);
 		if (i < 0)
@@ -47,16 +47,16 @@ int						get_next_line(int fd, char **line)
 	char				*line_stack;
 	char				*copy_stack;
 
-	stack = ft_gnl_read_file(fd, stack);
-	if (!(line) || !(stack))
+	if (!(line) || !(stack = ft_gnl_read_file(fd, stack)))
 		return (-1);
-	line_stack = ft_strchr(stack, '\n');
-	if (line_stack)
+	if ((line_stack = ft_strchr(stack, '\n')))
 	{
 		copy_stack = stack;
 		*line = ft_substr(stack, 0, (line_stack - stack));
 		stack = ft_strdup((stack + (line_stack - stack)) + 1);
 		free(copy_stack);
+		if (*line == NULL || stack == NULL)
+			return (-1);
 		return (1);
 	}
 	else
@@ -64,6 +64,8 @@ int						get_next_line(int fd, char **line)
 		*line = ft_strdup(stack);
 		free(stack);
 		stack = NULL;
+		if (*line == NULL)
+			return (-1);
 		return (0);
 	}
 }
