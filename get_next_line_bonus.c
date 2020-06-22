@@ -12,10 +12,36 @@
 
 #include "get_next_line_bonus.h"
 
+static int				ft_checkout(char *line, char *stack)
+{
+	if (line == NULL && stack != NULL)
+	{
+		free(stack);
+		return (0);
+	}
+	else if (line != NULL && stack == NULL)
+	{
+		free(line);
+		return (0);
+	}
+	else if (line == NULL && stack == NULL)
+		return (0);
+	return (1);
+}
+
+static char				*ft_buffer_stack(int i, char *stack, char *buffer)
+{
+	char				*buffer_stack;
+
+	buffer[i] = '\0';
+	buffer_stack = ft_strjoin(stack, buffer);
+	free(stack);
+	return (buffer_stack);
+}
+
 static char				*ft_gnl_read_file(int fd, char **stack)
 {
 	char				*buffer;
-	char				*buffer_stack;
 	int					i;
 
 	buffer = (char *)malloc(sizeof(char *) * (BUFFER_SIZE + 1));
@@ -29,11 +55,11 @@ static char				*ft_gnl_read_file(int fd, char **stack)
 	while (*stack != NULL && !(ft_strchr(*stack, '\n')))
 	{
 		if ((i = read(fd, buffer, BUFFER_SIZE)) < 0)
+		{
+			free(buffer);
 			return (0);
-		buffer[i] = '\0';
-		buffer_stack = ft_strjoin(*stack, buffer);
-		free(*stack);
-		*stack = buffer_stack;
+		}
+		*stack = ft_buffer_stack(i, *stack, buffer);
 		if (i == 0)
 			break ;
 	}
@@ -55,7 +81,7 @@ int						get_next_line(int fd, char **line)
 		*line = ft_substr(stack[fd], 0, (line_stack - stack[fd]));
 		stack[fd] = ft_strdup((stack[fd] + (line_stack - stack[fd])) + 1);
 		free(copy_stack);
-		if (*line == NULL || stack[fd] == NULL)
+		if ((ft_checkout(*line, stack[fd])) == 0)
 			return (-1);
 		return (1);
 	}
