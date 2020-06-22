@@ -6,7 +6,7 @@
 /*   By: tturnber <tturnber@MSK.21-SCHOOL.RU>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/09 14:11:34 by tturnber          #+#    #+#             */
-/*   Updated: 2020/06/18 16:23:25 by student          ###   ########.fr       */
+/*   Updated: 2020/06/22 17:29:50 by student          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,16 +19,16 @@ static char				*ft_gnl_read_file(int fd, char *stack)
 	int					i;
 
 	buffer = (char *)malloc(sizeof(char *) * (BUFFER_SIZE + 1));
-	if (buffer == NULL)
-		return (0);
 	if (fd < 0 || read(fd, buffer, 0) < 0 || BUFFER_SIZE <= 0)
+	{
+		free(buffer);
 		return (0);
+	}
 	if (stack == NULL)
 		stack = ft_strdup("");
 	while (stack != NULL && !(ft_strchr(stack, '\n')))
 	{
-		i = read(fd, buffer, BUFFER_SIZE);
-		if (i < 0)
+		if ((i = read(fd, buffer, BUFFER_SIZE)) < 0)
 			return (0);
 		buffer[i] = '\0';
 		buffer_stack = ft_strjoin(stack, buffer);
