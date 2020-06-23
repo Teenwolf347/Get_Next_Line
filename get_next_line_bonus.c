@@ -12,23 +12,6 @@
 
 #include "get_next_line_bonus.h"
 
-static int				ft_checkout(char *line, char *stack)
-{
-	if (line == NULL && stack != NULL)
-	{
-		free(stack);
-		return (0);
-	}
-	else if (line != NULL && stack == NULL)
-	{
-		free(line);
-		return (0);
-	}
-	else if (line == NULL && stack == NULL)
-		return (0);
-	return (1);
-}
-
 static char				*ft_buffer_stack(int i, char *stack, char *buffer)
 {
 	char				*buffer_stack;
@@ -44,7 +27,8 @@ static char				*ft_gnl_read_file(int fd, char **stack)
 	char				*buffer;
 	int					i;
 
-	buffer = (char *)malloc(sizeof(char *) * (BUFFER_SIZE + 1));
+	if (!(buffer = (char *)malloc(sizeof(char *) * (BUFFER_SIZE + 1))))
+		return (0);
 	if (fd < 0 || read(fd, buffer, 0) < 0 || BUFFER_SIZE <= 0)
 	{
 		free(buffer);
@@ -81,7 +65,7 @@ int						get_next_line(int fd, char **line)
 		*line = ft_substr(stack[fd], 0, (line_stack - stack[fd]));
 		stack[fd] = ft_strdup((stack[fd] + (line_stack - stack[fd])) + 1);
 		free(copy_stack);
-		if ((ft_checkout(*line, stack[fd])) == 0)
+		if (*line == NULL || stack[fd] == NULL)
 			return (-1);
 		return (1);
 	}
